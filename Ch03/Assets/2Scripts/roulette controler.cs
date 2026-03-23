@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class roulettecontroler : MonoBehaviour
 {
+    public float startSpeed = 30f;
+    public float decreaseRatio = 0.97f;
     float rotSpeed = 0;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -17,6 +19,8 @@ public class roulettecontroler : MonoBehaviour
             rotSpeed = 10f;
         }
 
-        transform.Rotate(0,0,rotSpeed);
+        transform.Rotate(0,0,this.rotSpeed);
+
+        rotSpeed *= decreaseRatio;
     }
 }
