@@ -1,68 +1,61 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement; // LoadScene을 사용하는 데 필요!
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
-    Rigidbody2D rigid2D;
-    float jumpForce = 600.0f;
-    float walkForce = 30;
-    float maxWalkSpeed = 2.0f;
-    public Sprite[] walkSprites;
-    public Sprite jumpSprite;
+    Rigidbody2D rb;
+    Animator anim;
+    Vector3 startPosition;
+    
+    public float jumpForce = 15.0f;
+    public float walkForce = 30.0f;
+    public float maxWalkSpeed = 2.0f;
+    
     float time = 0;
-    int idx = 0;
-    SpriteRenderer spriteRenderer;
+    float animationPeriod = 0.1f;
 
     void Start()
     {
         Application.targetFrameRate = 60;
-        this.rigid2D = GetComponent<Rigidbody2D>();
-        this.spriteRenderer = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+        startPosition = transform.position;
     }
 
     void Update()
     {
-        // 점프
-        if (Touchscreen.current.primaryTouch.press.wasPressedThisFrame && this.rigid2D.linearVelocityY == 0)
+        if (Mouse.current.leftButton.wasPressedThisFrame && Mathf.Abs(rb.linearVelocityY) < 0.01f)
         {
-            this.rigid2D.AddForce(transform.up * this.jumpForce);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
 
-        // 오른쪽으로 이동
-        if (this.rigid2D.linearVelocityX < this.maxWalkSpeed)
+        if (rb.linearVelocityX < maxWalkSpeed)
         {
-            this.rigid2D.AddForce(transform.right * walkForce);
+            rb.AddForce(Vector2.right * walkForce);
         }
 
-        // 애니메이션
-        if (this.rigid2D.linearVelocityY != 0)
+        time += Time.deltaTime;
+        if (Mathf.Abs(rb.linearVelocityY) > 0.1f)
         {
-            this.spriteRenderer.sprite = this.jumpSprite;
+            anim.SetBool("IsJumping", true);
         }
-        else
+        else if (time > animationPeriod)
         {
-            this.time += Time.deltaTime;
-            if (this.time > 0.1f)
-            {
-                this.time = 0;
-                this.spriteRenderer.sprite = this.walkSprites[this.idx];
-                this.idx = 1 - this.idx;
-            }
+            anim.SetBool("IsJumping", false);
         }
 
-        // 화면 밖으로 나가면 처음부터
-        if (transform.position.y < -10)
+        if (transform.position.y < -8f)
         {
-            SceneManager.LoadScene("GameScene");
+            rb.linearVelocity = Vector2.zero;
+            transform.position = startPosition;
         }
     }
-    
-    // 골 도착
-    void OnTriggerEnter2D(Collider2D collision)
+
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("골");
         SceneManager.LoadScene("ClearScene");
+        Debug.Log("성공");
     }
 }
-
