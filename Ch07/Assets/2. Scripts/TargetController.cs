@@ -2,14 +2,19 @@ using UnityEngine;
 
 public class TargetController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    GameObject player;
+
+    private void Start()
     {
-        
+        player = GameObject.Find("Player");
+    }
+    private void Update()
+    {
+        transform.LookAt(player.transform);   
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnCollisionEnter(Collision collision)
     {
         
     }
