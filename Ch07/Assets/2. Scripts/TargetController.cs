@@ -4,10 +4,11 @@ public class TargetController : MonoBehaviour
 {
 
     GameObject player;
-
+    TargetGenerator tg;
     private void Start()
     {
         player = GameObject.Find("Player");
+        tg = GameObject.FindObjectOfType<TargetGenerator>();
     }
     private void Update()
     {
@@ -16,6 +17,10 @@ public class TargetController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        
+        if(collision.gameObject.tag.Equals("Bamsongi"))
+        {
+            tg.GenerateTarget();
+            Destroy(gameObject);
+        }   
     }
 }
