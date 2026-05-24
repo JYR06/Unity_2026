@@ -14,14 +14,13 @@ public class TargetGenerator : MonoBehaviour
 
     public void GenerateTarget(Vector3 PlayerPosition)
     {
+        int index;
         do
-    {
-    Index = Random.Range(1,TargetPosition.Length);
-    } while(
-    Vector3.Distance(PlayerPosition, TargetPosition[Index].position)<minDistance);
-        Vector3 position = TargetPosition[Index].position;
-        GameObject.target = Instantiate(targetPrefab, position, Quaternion.identity);
+        {
+            index = Random.Range(1, targetPositions.Length);
+        }while(Vector3.Distance(PlayerPosition, targetPositions[index].position) < minDistance);
 
-        target.transform.SetParent(transform);  
+        Vector3 position = targetPositions(targetPrefab, position, Quaternion.identity);
+        targetPositions.transform.SetParent(transform);
     }
 }

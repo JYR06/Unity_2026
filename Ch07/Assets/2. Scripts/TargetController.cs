@@ -19,7 +19,7 @@ public class TargetController : MonoBehaviour
     {
         if(collision.gameObject.tag.Equals("Bamsongi"))
         {
-            tg.GenerateTarget();
+            tg.GenerateTarget(player.transform.position);
             Destroy(gameObject);
         }   
     }

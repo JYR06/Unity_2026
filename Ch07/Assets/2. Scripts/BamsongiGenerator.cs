@@ -6,7 +6,7 @@ public class BamsongiGenerator : MonoBehaviour
 {
     public GameObject bamsongiPrefab;
     public float throwForce = 10f;
-
+    public float minPower = 10f;
     float startY; 
 
     void Update()
@@ -22,6 +22,7 @@ public class BamsongiGenerator : MonoBehaviour
             bamsongi.transform.position = transform.position;
             
             float power = Input.mousePosition.y - startY;
+            if(power < minPower) return;
 
             Vector3 dir = transform.forward + transform.up * 0.5f;
             bamsongi.GetComponent<BamsongiController>().Shoot(dir * power * throwForce);
